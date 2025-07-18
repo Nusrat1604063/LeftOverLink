@@ -8,67 +8,78 @@
 import SwiftUI
 
 struct Profile: View {
-    @State private var fullName = ""
-    
+    @StateObject var viewModel = ProfileViewModel()
+    @EnvironmentObject var appstate: Appstate
+
     var body: some View {
-        ZStack {
-            Color(.systemYellow)
-                .opacity(0.2)
-                .ignoresSafeArea()
-            VStack(spacing : 8) {
-                ZStack {
-                    Circle()
-                        .fill(Color.black.opacity(0.7))
-                        .frame(width: 200, height: 200)
-                        .shadow(radius: 10)
-                    Image(systemName: "person.crop.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.gray)
-                        .frame(width: 100, height: 100)
-            
-                }
-                .padding(.top, 40)
-                Text("Samia Ibtesum")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.red)
-                HStack(alignment: .center) {
-                    Text("Bio :")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-                   Text("I love sharing food and reducing waste")
-                        .foregroundColor(.black)
-                        .font(.headline)
-                           
-                    
-                     
-                }
-                HStack(alignment: .center) {
-                    Image(systemName:"mappin.and.ellipse")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-                   Text("Dhanmondi, 13")
-                        .foregroundColor(.black)
-                        .font(.title2)
-                           
-                    
-                     
-                }
-                Spacer()
+            ScrollView {
                 
-              
-                                
+                VStack(spacing: 20) {
+                    ProfilePhotoPickerView(viewModel: viewModel.photoPickerVM)
+                        .padding(.top, 40)
+                    
+                    if viewModel.existingProfile {
+                        // Show profile info in read-only form
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Name: \(viewModel.name)")
+                                .font(.headline)
+                            Text("Address: \(viewModel.address)")
+                                .font(.subheadline)
+                            Text("Bio:")
+                                .font(.headline)
+                            Text(viewModel.bio)
+                                .font(.body)
+                        }
+                        .padding()
+                        Spacer()
+                       
+                    } else {
+                        // Show editable form fields
+                        TextField("Name", text: $viewModel.name)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                        
+                        TextField("Address", text: $viewModel.address)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                        
+                        TextEditor(text: $viewModel.bio)
+                            .frame(height: 100)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                            )
+                            .padding(.horizontal)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            Task {
+                                viewModel.uploadImageAndSaveProfile()
+                            }
+                        }) {
+                            Text(viewModel.isLoading ? "Saving..." : "Save Profile")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(viewModel.isLoading ? Color.gray : Color.green)
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                        }
+                        .disabled(viewModel.isLoading)
+                        .padding()
+                    }
+                }
+                .navigationTitle("Profile")
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .padding(.top, 40)
-          
-            
+            .task {
+                await viewModel.loadProfileIfExists()
+            }
         }
     }
-}
+
 
 #Preview {
     Profile()
+        .environmentObject(Appstate())
 }

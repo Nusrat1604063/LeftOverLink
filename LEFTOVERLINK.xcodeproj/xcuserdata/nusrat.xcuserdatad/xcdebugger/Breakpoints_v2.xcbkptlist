@@ -20,5 +20,50 @@
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "63DAB234-EC76-4050-B411-AEAB943AB332"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LEFTOVERLINK/Model/LeftoverPost.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "7"
+            endingLineNumber = "7"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.DebuggerCommand">
+                  <ActionContent
+                     consoleCommand = "">
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.AddressBreakpoint">
+         <BreakpointContent
+            uuid = "AE3255FD-7C36-4303-8E0A-59E84B3A8A80"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            symbolName = "*0x104252254">
+            <Locations>
+               <Location
+                  uuid = "AE3255FD-7C36-4303-8E0A-59E84B3A8A80 - 32c73a9da414fda4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dyld3::MachOAnalyzer::forEachBind(Diagnostics&amp;, void (char const*, dyld3::MachOLoaded::LinkEditInfo const&amp;, dyld3::MachOFile::SegmentInfo const*, bool, bool, unsigned int, int, unsigned int, unsigned char, unsigned long long, unsigned char, char const*, bool, bool, unsigned long long, bool&amp;) block_pointer, void (char const*) block_pointer) const"
+                  moduleName = "dyld"
+                  usesParentBreakpointCondition = "Yes">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

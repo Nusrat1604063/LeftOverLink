@@ -7,6 +7,8 @@
 
 import SwiftUI
 import PhotosUI
+import FirebaseStorage
+import Supabase
 
 @MainActor
 final class photoPickerViewModel: ObservableObject {
@@ -23,7 +25,7 @@ final class photoPickerViewModel: ObservableObject {
         }
     }
     
-    @Published private(set) var selectedFoodImage: UIImage? = nil
+    @Published  var selectedFoodImage: UIImage? = nil
     @Published var foodImageSelection: PhotosPickerItem? = nil {
         didSet {
             setImage(from: foodImageSelection, for: .food)
@@ -33,26 +35,94 @@ final class photoPickerViewModel: ObservableObject {
     
     private func setImage(from selection: PhotosPickerItem?, for purpose: ImagePurpose) {
         guard let selection else { return }
-        
+
         Task {
-            if let data = try? await selection.loadTransferable(type: Data.self),
-               let uiImage = UIImage(data: data) {
+            do {
+                guard let data = try await selection.loadTransferable(type: Data.self) else {
+                    print("❌ Failed to get image data")
+                    return
+                }
+
+                guard let image = UIImage(data: data),
+                      image.size.width > 0,
+                      image.size.height > 0,
+                      image.size.width.isFinite,
+                      image.size.height.isFinite else {
+                    print("❌ Image is invalid (size or data corrupted)")
+                    return
+                }
+
                 switch purpose {
                 case .profile:
-                    self.selectedProfileImage = uiImage
+                    self.selectedProfileImage = image
                 case .food:
-                    self.selectedFoodImage = uiImage
+                    self.selectedFoodImage = image
                 }
+
+            } catch {
+                print("❌ Error loading image: \(error.localizedDescription)")
+            }
+        }
+    
+
+        
+    }
+
+
+}
+
+extension photoPickerViewModel {
+    
+    func uploadImageToSupabase(image: UIImage?, folder: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let bucket = "leftoverlink-donation-post-image"
+        let projectRef = "dvfdshfhxwomxqazflzw"
+        
+        guard let image = image else {
+            completion(.failure(NSError(domain: "No image selected", code: 0)))
+            return
+        }
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            completion(.failure(NSError(domain: "Image conversion failed", code: 0)))
+            return
+        }
+        
+        let fileName = UUID().uuidString + ".jpg"
+        let path = "\(folder)/\(fileName)"
+        
+        Task {
+            do {
+                let supabase = SupabaseManager.shared.client
+                _ = try await supabase.storage
+                    .from(bucket)
+                    .upload(path, data: imageData)
+                
+                let publicUrl = "https://\(projectRef).supabase.co/storage/v1/object/public/\(bucket)/\(path)"
+                print("✅ Uploaded to Supabase: \(publicUrl)")
+                completion(.success(publicUrl))
+            } catch {
+                print("Upload failed: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
     }
-    
-    
 }
+
+extension photoPickerViewModel {
+    
+    func uploadFoodImageToSupabase(completion: @escaping (Result<String, Error>) -> Void) {
+        uploadImageToSupabase(image: selectedFoodImage, folder: "posts", completion: completion)
+    }
+    
+    func uploadProfileImageToSupabase(completion: @escaping (Result<String, Error>) -> Void) {
+        uploadImageToSupabase(image: selectedProfileImage, folder: "profiles", completion: completion)
+    }
+}
+
 
 struct ProfilePhotoPickerView: View {
     @ObservedObject var viewModel: photoPickerViewModel
-
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             // Image or placeholder (circular)
@@ -78,7 +148,7 @@ struct ProfilePhotoPickerView: View {
             // Floating + icon (positioned and visible)
             PhotosPicker(
                 selection: $viewModel.profileImageSelection,
-                matching: PHPickerFilter.images,
+                matching: .images,
                 photoLibrary: .shared()
             ) {
                 Image(systemName: "plus.circle.fill")
@@ -100,6 +170,7 @@ struct ProfilePhotoPickerView: View {
 struct FoodPhotoPickerView: View {
     @ObservedObject var viewModel: photoPickerViewModel
     
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             Group {
@@ -107,6 +178,9 @@ struct FoodPhotoPickerView: View {
                     Image(uiImage: foodImage)
                         .resizable()
                         .scaledToFill()
+                        .onAppear {
+                            print("✅ Showing image size: \(foodImage.size)")
+                        }
                 } else {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.gray.opacity(0.3))
@@ -123,7 +197,7 @@ struct FoodPhotoPickerView: View {
             
             PhotosPicker(
                 selection: $viewModel.foodImageSelection,
-                matching: PHPickerFilter.images,
+                matching: .images,
                 photoLibrary: .shared()
             ) {
                 Image(systemName: "plus.circle.fill")

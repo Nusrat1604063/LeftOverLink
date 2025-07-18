@@ -18,38 +18,37 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   }
 }
 
-
 @main
 struct LEFTOVERLINKApp: App {
-    // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var appState = Appstate()
     @StateObject private var model = Model()
-    
+
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $appState.routes) {
                 ZStack {
-                  
                     if Auth.auth().currentUser != nil {
-                        Welcome()
+                        HomePage() // ✅ Show a real view when logged in
                     } else {
-                        Profile()
-                    }
-                }.navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .signup:
-                        SignUp()
-                    case .login:
-                        LogIn()
-                    case .profile:
-                        Profile()
-                    case .welcome:
                         Welcome()
                     }
                 }
-            }.environmentObject(appState)
-             .environmentObject(model)
+                // ✅ 👇 This must be INSIDE NavigationStack, but OUTSIDE ZStack
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .signup: SignUp()
+                    case .login: LogIn()
+                    case .profile: Profile()
+                    case .feedaStray: FeedStrayView()
+                    case .donationpost: PostfoodView()
+                    case .welcome: Welcome()
+                    case .homepage: HomePage()
+                    }
+                }
+            }
+            .environmentObject(appState)
+            .environmentObject(model)
         }
     }
 }

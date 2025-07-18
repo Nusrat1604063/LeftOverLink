@@ -31,7 +31,7 @@ struct SignUp: View {
         do {
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             try await model.updateDisplayName(for: result.user, dsiplayName: name)
-            appstate.routes.append(.login)
+            appstate.routes.append(Route.login)
             
             
         } catch {
@@ -48,7 +48,7 @@ struct SignUp: View {
                     .ignoresSafeArea()
                 VStack(spacing: 20) {
                     Text("Create an Account")
-                        .font(.largeTitle)
+                        .font(.title)
                         .bold()
                         .foregroundColor(.green)
                     

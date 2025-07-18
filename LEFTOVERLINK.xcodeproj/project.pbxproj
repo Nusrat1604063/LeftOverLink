@@ -10,6 +10,12 @@
 		691187222E13D67D004EFF17 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 691187212E13D67D004EFF17 /* FirebaseAuth */; };
 		691187242E13D67D004EFF17 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 691187232E13D67D004EFF17 /* FirebaseFirestore */; };
 		691187262E13D67D004EFF17 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 691187252E13D67D004EFF17 /* FirebaseStorage */; };
+		69A7C5E82E212A7400EA4A49 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 69A7C5E72E212A7400EA4A49 /* Auth */; };
+		69A7C5EA2E212A7400EA4A49 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 69A7C5E92E212A7400EA4A49 /* Functions */; };
+		69A7C5EC2E212A7400EA4A49 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 69A7C5EB2E212A7400EA4A49 /* PostgREST */; };
+		69A7C5EE2E212A7400EA4A49 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 69A7C5ED2E212A7400EA4A49 /* Realtime */; };
+		69A7C5F02E212A7400EA4A49 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 69A7C5EF2E212A7400EA4A49 /* Storage */; };
+		69A7C5F22E212A7400EA4A49 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 69A7C5F12E212A7400EA4A49 /* Supabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +35,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69A7C5EE2E212A7400EA4A49 /* Realtime in Frameworks */,
+				69A7C5EC2E212A7400EA4A49 /* PostgREST in Frameworks */,
+				69A7C5EA2E212A7400EA4A49 /* Functions in Frameworks */,
 				691187222E13D67D004EFF17 /* FirebaseAuth in Frameworks */,
+				69A7C5F02E212A7400EA4A49 /* Storage in Frameworks */,
+				69A7C5F22E212A7400EA4A49 /* Supabase in Frameworks */,
 				691187242E13D67D004EFF17 /* FirebaseFirestore in Frameworks */,
+				69A7C5E82E212A7400EA4A49 /* Auth in Frameworks */,
 				691187262E13D67D004EFF17 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +89,12 @@
 				691187212E13D67D004EFF17 /* FirebaseAuth */,
 				691187232E13D67D004EFF17 /* FirebaseFirestore */,
 				691187252E13D67D004EFF17 /* FirebaseStorage */,
+				69A7C5E72E212A7400EA4A49 /* Auth */,
+				69A7C5E92E212A7400EA4A49 /* Functions */,
+				69A7C5EB2E212A7400EA4A49 /* PostgREST */,
+				69A7C5ED2E212A7400EA4A49 /* Realtime */,
+				69A7C5EF2E212A7400EA4A49 /* Storage */,
+				69A7C5F12E212A7400EA4A49 /* Supabase */,
 			);
 			productName = LEFTOVERLINK;
 			productReference = 69D654802E11511400C67051 /* LEFTOVERLINK.app */;
@@ -108,6 +126,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				691187202E13D67D004EFF17 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 69D654812E11511400C67051 /* Products */;
@@ -264,9 +283,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LEFTOVERLINK/Preview Content\"";
+				DEVELOPMENT_TEAM = X4U2UNHQ5G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -281,6 +302,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.freak.LEFTOVERLINK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -292,9 +314,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LEFTOVERLINK/Preview Content\"";
+				DEVELOPMENT_TEAM = X4U2UNHQ5G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -309,6 +333,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.freak.LEFTOVERLINK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -347,6 +372,14 @@
 				minimumVersion = 11.15.0;
 			};
 		};
+		69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -364,6 +397,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 691187202E13D67D004EFF17 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		69A7C5E72E212A7400EA4A49 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		69A7C5E92E212A7400EA4A49 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		69A7C5EB2E212A7400EA4A49 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		69A7C5ED2E212A7400EA4A49 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		69A7C5EF2E212A7400EA4A49 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		69A7C5F12E212A7400EA4A49 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69A7C5E62E212A7400EA4A49 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

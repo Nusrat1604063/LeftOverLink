@@ -54,7 +54,7 @@ struct Welcome: View {
                     VStack{
                     
                         Button(action: {
-                            appState.routes.append(.signup)
+                            appState.routes = [.signup]
                         }) {
                             Text("Sign Up")
                                 .font(.headline)
@@ -69,7 +69,7 @@ struct Welcome: View {
                             Text("Already have an account?")
                                 .foregroundColor(.gray)
                             Button(action: {
-                               appState.routes.append(.login)   
+                                appState.routes = [.login]
                                 print("Login tapped")
                             }) {
                                 Text("Login")

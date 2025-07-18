@@ -21,12 +21,12 @@ struct LogIn: View {
     
     private func login() async  {
         do {
-            let result = try await Auth.auth().signIn(withEmail: email, password: password)
-            //Go to the main Screen
-            //Profile() 
+          let result = try await Auth.auth().signIn(withEmail: email, password: password)
+            print("✅ Logged in as user: \(result.user.uid)")
+            appState.routes.append(.profile)
             
         } catch {
-            print(error.localizedDescription)
+            print("❌ Login failed: \(error.localizedDescription)")
         }
     }
     
@@ -50,10 +50,10 @@ struct LogIn: View {
                    .padding(.horizontal)
                     
                     Button(action: {
-                        task {
+                        _ = Task {
                             await login()
                         }
-                        appState.routes.append(.profile)
+                       
                         print("Tapped login")
                     }) {
                         Text("LogIn")
@@ -71,8 +71,10 @@ struct LogIn: View {
     
 }
 
-#Preview {
-    LogIn()
-        .environmentObject(Model())
-        .environmentObject(Appstate())
-}
+//#Preview {
+//    NavigationStack{
+//        LogIn()
+//            .environmentObject(Model())
+//            .environmentObject(Appstate())
+//    }
+//}

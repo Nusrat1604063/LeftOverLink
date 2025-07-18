@@ -9,19 +9,9 @@ import SwiftUI
 
 struct PostfoodView: View {
     
-    enum DietaryTag: String, CaseIterable {
-        case halal
-        case vegan
-        case meat
-    }
-    
-    @StateObject private var photoPickerVM = photoPickerViewModel()
-    
-    // Form state variables
-    @State private var selectedDiet: DietaryTag = .halal
-    @State private var foodName: String = ""
-    @State private var portion: Int = 1
-    @State private var location: String = ""
+    @Environment(\.dismiss) private var dismiss
+    @StateObject var postfoodVm = PostFoodViewModel()
+   
     
     var body: some View {
         ZStack {
@@ -31,11 +21,11 @@ struct PostfoodView: View {
                 VStack(spacing: 20) {
                     
                     // 1. Food Photo Picker
-                    FoodPhotoPickerView(viewModel: photoPickerVM)
+                    FoodPhotoPickerView(viewModel: postfoodVm.photoPickerVM)
                         .padding(.top, 30)
                     
                     // 2. Food Name
-                    TextField("Food Name", text: $foodName)
+                    TextField("Food Name", text: $postfoodVm.foodName)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 14)
                         .background(
@@ -46,18 +36,18 @@ struct PostfoodView: View {
                         
                     
                     // 3. Dietary Tag Dropdown
-                    Picker("Dietary tag", selection: $selectedDiet) {
-                        ForEach(DietaryTag.allCases, id: \.self) { tag in
+                    Picker("Dietary tag", selection: $postfoodVm.selectedDiet) {
+                        ForEach(PostFoodViewModel.DietaryTag.allCases, id: \.self) { tag in
                             Text(tag.rawValue.capitalized)
                         }
                     }
                     .pickerStyle(.segmented)
                     
                     // 4. Portion Selection (Stepper)
-                    Stepper("Portion: \(portion) people", value: $portion, in: 1...100)
+                    Stepper("Portion: \(postfoodVm.portion) people", value: $postfoodVm.portion, in: 1...100)
                     
                     // 5. Pickup Location
-                    TextField("Pickup Location", text: $location)
+                    TextField("Pickup Location", text: $postfoodVm.location)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 14)
                         .background(
@@ -67,12 +57,13 @@ struct PostfoodView: View {
                         )
                     // 6. Submit Button
                     Button(action: {
-                        // Submit logic goes here
+                        postfoodVm.uploadFoodImageAndSavePost()
+                        dismiss()
                     }) {
-                        Text("Post Food")
+                        Text("Post for Donation")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.green)
+                            .background(postfoodVm.formValid() ? Color.green : Color.gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -80,12 +71,14 @@ struct PostfoodView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Post Food")
+            .navigationTitle("Donation post")
         }
     }
 }
 
 
-#Preview {
-    PostfoodView()
-}
+//#Preview {
+//    NavigationStack{
+//        PostfoodView()
+//    }
+//}
