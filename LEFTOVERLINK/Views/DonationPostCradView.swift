@@ -30,7 +30,7 @@ struct DonationPostCardView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(post.userName)
+                    Text(post.username)
                         .font(.headline)
                         .foregroundColor(.primary)
                     
@@ -43,7 +43,7 @@ struct DonationPostCardView: View {
             }
             
             // MARK: - Main Food Image
-            if let url = URL(string: post.imageURL), !post.imageURL.isEmpty {
+            if let url = URL(string: post.imageurl), !post.imageurl.isEmpty {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:
@@ -73,12 +73,12 @@ struct DonationPostCardView: View {
 
             // MARK: - Description Section
             VStack(alignment: .leading, spacing: 4) {
-                Text(post.foodName)
+                Text(post.foodname)
                     .font(.title3)
                     .bold()
                 Text("Portion: \(post.portion)")
                     .font(.subheadline)
-                Text("Dietary: \(post.dietaryTag)")
+                Text("Dietary: \(post.dietarytag)")
                     .font(.subheadline)
                 Text("Location: \(post.location)")
                     .font(.subheadline)

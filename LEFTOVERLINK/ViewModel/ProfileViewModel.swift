@@ -26,21 +26,22 @@ final class ProfileViewModel: ObservableObject {
     // MARK: - Load Profile
     func loadProfileIfExists() async {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-
+        print("Loading profile for user: \(uid)")
         isLoading = true
         defer { isLoading = false }
 
         do {
-            let snapshot = try await db.collection("users").document(uid).getDocument()
+            let snapshot = try await db.collection("userProfiles").document(uid).getDocument()
             if let data = snapshot.data() {
                 name = data["name"] as? String ?? ""
                 address = data["address"] as? String ?? ""
                 bio = data["bio"] as? String ?? ""
                 profileImageUrl = data["profileImageUrl"] as? String
                 self.existingProfile = !name.isEmpty && !address.isEmpty && !bio.isEmpty
-
+                print("value of existingProfile do block: \(existingProfile)")
             } else {
                 existingProfile = false
+                print("value of existingProfile else block: \(existingProfile)")
             }
         } catch {
             print(" Failed to fetch profile: \(error.localizedDescription)")

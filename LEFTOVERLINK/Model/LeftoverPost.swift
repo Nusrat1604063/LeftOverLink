@@ -9,34 +9,30 @@ import Foundation
 import FirebaseFirestore
 
 struct DonationPost : Codable, Identifiable {
-    var documentId: String?
-    
-    var id: String {
-        documentId ?? UUID().uuidString
-    }
-    
-    let foodName: String
-    let portion: Int
-    let dietaryTag: String
-    let location: String
-    let imageURL: String
-    let timestamp: Date
-    let userName: String
-    let profileImageURL: String
+    @DocumentID var id: String?
+
+        let foodname: String
+        let portion: Int
+        let dietarytag: String
+        let location: String
+        let imageurl: String
+        let timestamp: Date
+        let username: String
+        let profileImageURL: String
  
 }
 
 extension DonationPost {
     func toDictionary()  -> [String:Any] {
         return[
-            "foodname" : foodName,
+            "foodname" : foodname,
             "portion" : portion,
-            "dietarytag" : dietaryTag,
+            "dietarytag" : dietarytag,
             "location" : location,
-            "imageurl" : imageURL,
+            "imageurl" : imageurl,
             "timestamp" : Timestamp(date: timestamp),
-            "username": userName,
-            "profileImageURL": profileImageURL 
+            "username": username,
+            "profileImageURL": profileImageURL
         ]
     }
 }

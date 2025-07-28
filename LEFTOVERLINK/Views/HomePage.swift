@@ -21,9 +21,8 @@ struct HomePage: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(viewModel.posts) { post in
-                            //                                DonationPostCardView(post: post)
-                            //                                    .padding(.horizontal)
-                            Text("okok")
+                        DonationPostCardView(post: post)
+                            .padding(.horizontal)
                         }
                     }
                     .padding(.vertical)

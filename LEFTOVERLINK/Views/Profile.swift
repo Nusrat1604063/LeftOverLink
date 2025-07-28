@@ -73,6 +73,7 @@ struct Profile: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             .task {
+                
                 await viewModel.loadProfileIfExists()
             }
         }

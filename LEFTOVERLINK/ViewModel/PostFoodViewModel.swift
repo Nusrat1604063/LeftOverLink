@@ -84,14 +84,14 @@ final class PostFoodViewModel: ObservableObject {
                         
                         // 3. Create a new DonationPost with user and image info
                         let newPost = DonationPost(
-                            documentId: nil,
-                            foodName: self.foodName,
+                            id: nil,
+                            foodname: self.foodName,
                             portion: self.portion,
-                            dietaryTag: self.selectedDiet.rawValue,
+                            dietarytag: self.selectedDiet.rawValue,
                             location: self.location,
-                            imageURL: imageUrl,
+                            imageurl: imageUrl,
                             timestamp: Date(),
-                            userName: userProfile.name,
+                            username: userProfile.name,
                             profileImageURL: userProfile.profileImageUrl
                         )
                         

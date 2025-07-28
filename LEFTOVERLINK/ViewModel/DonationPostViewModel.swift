@@ -13,6 +13,7 @@ class DonationPostViewModel: ObservableObject {
     private let db = Firestore.firestore()
     
     func fetchPosts() {
+        print("Fetching posts...")
         db.collection("donationPosts")
             .order(by: "timestamp", descending: true)
             .getDocuments { snapshot, error in
@@ -20,6 +21,7 @@ class DonationPostViewModel: ObservableObject {
                     print("Error fetching posts:", error)
                     return
                 }
+                print("Fetched posts.")
                 self.posts = snapshot?.documents.compactMap {
                     try? $0.data(as: DonationPost.self)
                 } ?? []
