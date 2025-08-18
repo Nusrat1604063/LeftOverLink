@@ -38,61 +38,61 @@ enum LocationError: LocalizedError {
 
 @Observable
 class LocationManager: NSObject, CLLocationManagerDelegate {
-    
-    let manager = CLLocationManager()
-    static let shared = LocationManager()       //singleton Instance
-    var error: LocationError? = nil
-    
-    var region: MKCoordinateRegion = MKCoordinateRegion()
-    
-    private override init() {               //since wr're conforming to NSObjcet
-        super.init()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        self.manager.delegate = self
-    }
-}
 
-extension LocationManager {
-    // is  fired when the location of the user is updated
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        locations.last.map {
-            region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude),
-                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    static let shared = LocationManager()
+    let manager = CLLocationManager()
+    var region: MKCoordinateRegion = MKCoordinateRegion()
+    var error: LocationError? = nil
+
+    private override init() {
+        super.init()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+
+    // MARK: - Public API
+    func requestPermission() {
+        if manager.authorizationStatus == .notDetermined {
+            manager.requestWhenInUseAuthorization()
+        } else {
+            handleAuthorizationStatus(manager.authorizationStatus)
         }
     }
-    
-    //is fired when the authorization status is changed
+
+    // MARK: - Delegate
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        switch manager.authorizationStatus {
-            case .notDetermined:
-                manager.requestWhenInUseAuthorization()
-            case .authorizedAlways, .authorizedWhenInUse:
-                manager.requestLocation()
-            case .denied:
-                error = .authorizationDenied
-            case .restricted:
-                error = .authorizationRestricted
-            @unknown default:
-                break
+        handleAuthorizationStatus(manager.authorizationStatus)
+    }
+
+    // MARK: - Private Helper
+    private func handleAuthorizationStatus(_ status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+        case .denied:
+            error = .authorizationDenied
+        case .restricted:
+            error = .authorizationRestricted
+        default:
+            break
         }
     }
-    
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        region = MKCoordinateRegion(center: location.coordinate,
+                                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    }
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        
-        if let clError = error as? CLError {   //coreLocattion Error
+        if let clError = error as? CLError {
             switch clError.code {
-                case .locationUnknown:
-                    self.error = .unknownLocation
-                case .denied:
-                    self.error = .accessDenied
-                case .network:
-                    self.error = .network
-                default:
-                    self.error = .operationFailed
+            case .locationUnknown: self.error = .unknownLocation
+            case .denied: self.error = .accessDenied
+            case .network: self.error = .network
+            default: self.error = .operationFailed
             }
         }
-        
     }
-    
 }
 

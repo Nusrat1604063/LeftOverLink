@@ -75,6 +75,9 @@ struct MapView: View {
         }.onMapCameraChange {context in
             visibleRegion = context.region
         }
+        .onAppear {
+            locationManager.requestPermission()
+        }
         
     }
 }
