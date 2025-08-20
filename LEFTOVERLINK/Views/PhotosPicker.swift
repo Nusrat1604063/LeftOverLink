@@ -18,7 +18,7 @@ final class photoPickerViewModel: ObservableObject {
         case food
     }
     
-    @Published private(set) var selectedProfileImage: UIImage? = nil
+    @Published  var selectedProfileImage: UIImage? = nil
     @Published var profileImageSelection: PhotosPickerItem? = nil {
         didSet {
             setImage(from: profileImageSelection, for: .profile)

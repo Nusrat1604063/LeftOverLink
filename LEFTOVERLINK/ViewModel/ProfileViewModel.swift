@@ -35,20 +35,54 @@ final class ProfileViewModel: ObservableObject {
         do {
             let snapshot = try await db.collection("userProfiles").document(uid).getDocument()
             if let data = snapshot.data() {
-                name = data["name"] as? String ?? ""
-                address = data["address"] as? String ?? ""
-                bio = data["bio"] as? String ?? ""
-                profileImageUrl = data["profileImageUrl"] as? String
-                self.existingProfile = !name.isEmpty && !address.isEmpty && !bio.isEmpty
-                print("value of existingProfile do block: \(existingProfile)")
+                // Extract values first
+                let fetchedName = data["name"] as? String ?? ""
+                let fetchedAddress = data["address"] as? String ?? ""
+                let fetchedBio = data["bio"] as? String ?? ""
+                let fetchedProfileImageUrl = data["profileImageUrl"] as? String
+                let fetchedDisplayName = data["locationName"] as? String ?? ""
+                let fetchedLocation = Location(
+                    lat: data["location.lat"] as? Double ?? 0,
+                    lng: data["location.lng"] as? Double ?? 0
+                )
+
+                // Update UI on main thread
+                await MainActor.run {
+                    name = fetchedName
+                    address = fetchedAddress
+                    bio = fetchedBio
+                    profileImageUrl = fetchedProfileImageUrl
+                    displayName = fetchedDisplayName
+                    location = fetchedLocation
+                    existingProfile = !name.isEmpty && !address.isEmpty && !bio.isEmpty
+                    print("Loaded profileImageUrl:", profileImageUrl ?? "nil")
+                }
+
+                // Load image from URL into selectedProfileImage
+                if let urlString = fetchedProfileImageUrl, let url = URL(string: urlString) {
+                    Task {
+                        do {
+                            let (data, _) = try await URLSession.shared.data(from: url)   //downloads the image from URL so in task doing synchronously
+                            if let image = UIImage(data: data) {
+                                await MainActor.run {
+                                    self.photoPickerVM.selectedProfileImage = image
+                                    print("✅ Loaded profile image from URL")
+                                }
+                            }
+                        } catch {
+                            print("❌ Failed to load profile image from URL:", error)
+                        }
+                    }
+                }
             } else {
-                existingProfile = false
+                await MainActor.run { existingProfile = false }
                 print("value of existingProfile else block: \(existingProfile)")
             }
         } catch {
             print(" Failed to fetch profile: \(error.localizedDescription)")
         }
     }
+
 
     // MARK: - Save Profile
     func uploadImageAndSaveProfile() {
@@ -69,6 +103,7 @@ final class ProfileViewModel: ObservableObject {
                         address: self.address,
                         bio: self.bio,
                         location: self.location,
+                        locationName: self.displayName,
                         profileImageUrl: imageUrl,
                         createdAt: Date()
                     )
@@ -104,3 +139,9 @@ final class ProfileViewModel: ObservableObject {
         
     }
 }
+
+/*
+ Because SwiftUI updates the UI only on the main thread, any change to a @Published property like profileImageUrl must happen on the main thread; otherwise, the view might not refresh.
+ Firestore’s getDocument() runs on a background thread, so assigning directly from its snapshot can happen off the main thread.
+ Wrapping it in MainActor.run ensures the UI updates correctly when the property changes.
+ */

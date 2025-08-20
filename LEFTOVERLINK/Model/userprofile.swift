@@ -20,6 +20,7 @@ struct UserProfile: Identifiable, Codable {
     var address: String
     var bio: String
     var location: Location
+    var locationName: String
     var profileImageUrl: String
     var createdAt: Date
  
@@ -40,6 +41,7 @@ extension UserProfile {
             "location": [
                 "lat" : location.lat,
                 "lng": location.lng],
+            "locationName" : locationName,
             "profileImageUrl": profileImageUrl as Any,
             "createdAt": Timestamp(date: createdAt)
         ]
