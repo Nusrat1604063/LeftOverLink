@@ -90,7 +90,9 @@ struct HomePage: View {
             .padding(.trailing, 16)
             
         }
+        .navigationBarBackButtonHidden(true)
     }
+    
 }
 //
 //#Preview {

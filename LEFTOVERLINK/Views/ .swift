@@ -11,11 +11,11 @@ struct Profile: View {
     @StateObject var viewModel = ProfileViewModel()
     @EnvironmentObject var appstate: Appstate
     @State private var showMap = false;
-
-
+    
     var body: some View {
+        ZStack(alignment: .topLeading) {  // top-left alignment for the button
+            
             ScrollView {
-                
                 VStack(spacing: 20) {
                     ProfilePhotoPickerView(viewModel: viewModel.photoPickerVM)
                         .padding(.top, 40)
@@ -35,11 +35,10 @@ struct Profile: View {
                                 Image(systemName: "mappin.and.ellipse")
                                 Text(viewModel.displayName)
                             }
-                           
                         }
                         .padding()
                         Spacer()
-                       
+                        
                     } else {
                         // Show editable form fields
                         TextField("Name", text: $viewModel.name)
@@ -57,10 +56,8 @@ struct Profile: View {
                                     .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                             )
                             .padding(.horizontal)
-                        Button(action: {
-                            //MapView(profileViewModel: <#ProfileViewModel#>)
-                            showMap = true
-                        }) {
+                        
+                        Button(action: { showMap = true }) {
                             Image(systemName: "mappin.and.ellipse")
                                 .font(.system(size: 30))
                                 .foregroundColor(.red)
@@ -87,15 +84,31 @@ struct Profile: View {
                         .padding()
                     }
                 }
-                .navigationTitle("Profile")
-                .navigationBarTitleDisplayMode(.inline)
+                .padding(.top, 60) // leave space for the floating home button
             }
             .task {
                 await viewModel.loadProfileIfExists()
             }
+            
+            // Floating Home Button (top-left)
+            if viewModel.existingProfile {
+                Button(action: { appstate.routes.append(.homepage) }) {
+                    Image(systemName: "house.fill")
+                        .font(.system(size: 28))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                        .shadow(radius: 4)
+                }
+                .padding(.leading, 16)
+                .padding(.top, 16)
+            }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
     }
-
+}
 
 #Preview {
     Profile()
