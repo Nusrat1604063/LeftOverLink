@@ -63,7 +63,7 @@ struct Profile: View {
                                 .foregroundColor(.red)
                         }
                         .sheet(isPresented: $showMap) {
-                            MapView(profileViewModel: viewModel)
+                            MapView(mapPurPose: .profile, profileViewModel: viewModel)
                         }
                         
                         Spacer()

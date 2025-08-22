@@ -8,14 +8,22 @@ import Foundation
 import SwiftUI
 import MapKit
 
-struct MapView: View {
+enum MapPurPose {
+    case profile
+    case donationPickup
+}
 
+struct MapView: View {
+    
+    @State var mapPurPose: MapPurPose
     @State private var selectedDetent: PresentationDetent = .fraction(0.15)
     @State private var locationManager = LocationManager.shared
     @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var visibleRegion: MKCoordinateRegion?
     @StateObject private var searchViewModel = MapSearchViewModel()
-    @ObservedObject var profileViewModel: ProfileViewModel
+    var profileViewModel: ProfileViewModel? = nil
+    var donationViewModel: PostFoodViewModel? = nil
+    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -58,8 +66,19 @@ struct MapView: View {
                             selectedDetent = .fraction(0.15)
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) // dismissKeyboard
                             
-                            profileViewModel.location = Location(lat: coordinate.latitude, lng: coordinate.longitude)
-                            profileViewModel.displayName = "\(place.display_name)"
+                            switch mapPurPose {
+                            case .profile:
+                                if let profileVM = profileViewModel {
+                                    profileVM.location = Location(lat: coordinate.latitude, lng: coordinate.longitude)
+                                    profileVM.displayName = place.display_name
+                                }
+                            case .donationPickup:
+                                if let donationVM = donationViewModel {
+                                    donationVM.location = Location(lat: coordinate.latitude, lng: coordinate.longitude)
+                                    donationVM.locationdisplayName = place.display_name
+                                }
+                            }
+
                             dismiss()
                         }
                     }

@@ -23,12 +23,14 @@ final class PostFoodViewModel: ObservableObject {
     @Published  var selectedDiet: DietaryTag = .halal
     @Published  var foodName: String = ""
     @Published  var portion: Int = 1
-    @Published  var location: String = ""
+    @Published var location: Location = Location(lat: 0, lng: 0)
+    @Published var locationdisplayName: String = ""
+
     
     @Published var photoPickerVM = photoPickerViewModel()
     
     func formValid() -> Bool {
-        return photoPickerVM.selectedFoodImage != nil && !foodName.isEmpty  && portion > 0 && !location.isEmpty
+        return photoPickerVM.selectedFoodImage != nil && !foodName.isEmpty  && portion > 0 && location.lat != 0 && location.lng != 0
         
     }
     
@@ -89,6 +91,7 @@ final class PostFoodViewModel: ObservableObject {
                             portion: self.portion,
                             dietarytag: self.selectedDiet.rawValue,
                             location: self.location,
+                            locationDisplayName:  self.locationdisplayName,
                             imageurl: imageUrl,
                             timestamp: Date(),
                             username: userProfile.name,
@@ -122,7 +125,7 @@ final class PostFoodViewModel: ObservableObject {
         foodName = ""
         portion = 1
         selectedDiet = DietaryTag.halal
-        location = ""
+        location = Location(lat: 0, lng: 0)
         photoPickerVM.selectedFoodImage = nil
         
     }

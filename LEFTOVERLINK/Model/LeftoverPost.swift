@@ -14,13 +14,16 @@ struct DonationPost : Codable, Identifiable {
         let foodname: String
         let portion: Int
         let dietarytag: String
-        let location: String
+        let location: Location
+        let locationDisplayName: String
         let imageurl: String
         let timestamp: Date
         let username: String
         let profileImageURL: String
  
 }
+
+
 
 extension DonationPost {
     func toDictionary()  -> [String:Any] {
@@ -29,6 +32,7 @@ extension DonationPost {
             "portion" : portion,
             "dietarytag" : dietarytag,
             "location" : location,
+            "locationDisplayName" : locationDisplayName,
             "imageurl" : imageurl,
             "timestamp" : Timestamp(date: timestamp),
             "username": username,

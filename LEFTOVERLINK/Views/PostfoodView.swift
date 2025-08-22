@@ -11,6 +11,7 @@ struct PostfoodView: View {
     
     @Environment(\.dismiss) private var dismiss
     @StateObject var postfoodVm = PostFoodViewModel()
+    @State private var showMap = false;
    
     
     var body: some View {
@@ -47,14 +48,42 @@ struct PostfoodView: View {
                     Stepper("Portion: \(postfoodVm.portion) people", value: $postfoodVm.portion, in: 1...100)
                     
                     // 5. Pickup Location
-                    TextField("Pickup Location", text: $postfoodVm.location)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 14)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color(.white))
-                                
-                        )
+//                    TextField("Pickup Location", text: $postfoodVm.location)
+//                        .padding(.horizontal, 16)
+//                        .padding(.vertical, 14)
+//                        .background(
+//                            RoundedRectangle(cornerRadius: 16)
+//                                .fill(Color(.white))
+//                                
+//                        )
+                    Button(action : {
+                        showMap = true;
+                    }) {
+                        HStack{
+                            Image(systemName: "location.fill")
+                            Text("Pickup Location")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .bold(true)
+                        }
+                    }
+                    .sheet(isPresented: $showMap) {
+                       MapView(mapPurPose: .donationPickup, donationViewModel: postfoodVm)
+                    }
+                    
+                    if !postfoodVm.locationdisplayName.isEmpty {
+                        VStack(alignment: .leading) {
+                            Text("Pickup Location:")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            Text(postfoodVm.locationdisplayName)
+                                .font(.body)
+                                .padding()
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(8)
+                        }
+                    }
+
                     // 6. Submit Button
                     Button(action: {
                         postfoodVm.uploadFoodImageAndSavePost()
